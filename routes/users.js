@@ -6,7 +6,10 @@ var SHA256 = require('crypto-js/sha256');
 var encBase64 = require('crypto-js/enc-base64');
 
 var userModel = require('../models/user');
-var eventModel = require('../models/event');
+
+var createevent = require('./createevent');
+var createworkspace = require('./createworkspace');
+var updatesection = require('./updatesection');
 
 router.get('/', async function(req, res, next) {
   console.log('**** Get users ****');
@@ -26,6 +29,8 @@ router.post('/sign-up', async function(req, res, next) {
   var password = req.body.password;
   var type = 'admin';
   var dtevent = new Date();
+  var initials =
+    firstname.charAt(0).toUpperCase() + lastname.charAt(0).toUpperCase();
 
   var searchEmail = await userModel.findOne({ email });
 
@@ -35,6 +40,7 @@ router.post('/sign-up', async function(req, res, next) {
     var newUser = new userModel({
       firstname,
       lastname,
+      initials,
       email,
       salt: salt,
       password: SHA256(password + salt).toString(encBase64),
@@ -42,24 +48,20 @@ router.post('/sign-up', async function(req, res, next) {
       type
     });
 
-    /* Save in an event */
-    var newEvent = new eventModel({
-      dtevent,
-      user: newUser._id,
-      entity: 'U',
-      type: 'C'
-    });
+    var eventSaveToDB = await createevent(newUser._id, 'U', 'C');
 
-    newUser.event = newEvent._id;
+    newUser.event.push(eventSaveToDB._id);
 
-    var userSaveToDb = await newUser.save();
+    var userSaveToDB = await newUser.save();
 
-    var eventSaveToDB = await newEvent.save();
+    var workspaceSaveToDB = await createworkspace(userSaveToDB._id, null);
 
-    res.json({ res: true, user: userSaveToDb, event: eventSaveToDB });
+    var section = await updatesection(workspaceSaveToDB, null, null);
+
+    res.json({ res: true, user: userSaveToDB });
 
     /* Memorize the user for the session */
-    req.session.user = userSaveToDb;
+    req.session.user = userSaveToDB;
   } else {
     res.json({
       res: false,

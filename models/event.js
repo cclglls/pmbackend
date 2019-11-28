@@ -7,7 +7,7 @@ var eventSchema = mongoose.Schema({
   type: String,
   project: { type: mongoose.Schema.Types.ObjectId, ref: 'project' },
   task: { type: mongoose.Schema.Types.ObjectId, ref: 'task' },
-  conv: { type: mongoose.Schema.Types.ObjectId, ref: 'conv' },
+  conversation: { type: mongoose.Schema.Types.ObjectId, ref: 'conversation' },
   comment: { type: mongoose.Schema.Types.ObjectId, ref: 'comment' }
 });
 
