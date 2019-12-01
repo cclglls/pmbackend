@@ -7,7 +7,7 @@ var updatesection = async function(workspace, sectionId, sectionFromFront) {
 
   /* Create Sections for users and for project */
   if (sectionId === null) {
-    if (workspace.iduser !== null) {
+    if (workspace.user !== null) {
       name = 'Tasks assigned to me';
       newsection = new sectionModel({
         name,

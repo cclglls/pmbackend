@@ -8,6 +8,7 @@ var createevent = async function(Id, entity, type) {
   var taskId = null;
   var convId = null;
   var commentId = null;
+  var statusId = null;
 
   switch (entity) {
     case 'U':
@@ -25,6 +26,9 @@ var createevent = async function(Id, entity, type) {
     case 'CT':
       commentId = Id;
       break;
+    case 'S':
+      statusId = Id;
+      break;
   }
 
   var newEvent = new eventModel({
@@ -34,6 +38,7 @@ var createevent = async function(Id, entity, type) {
     task: taskId,
     conversation: convId,
     comment: commentId,
+    status: statusId,
     entity,
     type
   });

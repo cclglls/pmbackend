@@ -94,7 +94,7 @@ router.get('/sign-in', async function(req, res, next) {
     }
   }
 
-  res.json({ res: true, isUserExist });
+  res.json({ res: true, isUserExist, user });
 });
 
 /* GET Logout. */

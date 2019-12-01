@@ -8,6 +8,10 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var projectsRouter = require('./routes/projects');
 var tasksRouter = require('./routes/tasks');
+var conversations = require('./routes/conversations');
+var statusRouter = require('./routes/status');
+var workspaceRouter = require('./routes/workspaces');
+var conversationsRouter = conversations.router;
 
 require('./models/bddconnect');
 var session = require('express-session');
@@ -39,6 +43,9 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/projects', projectsRouter);
 app.use('/tasks', tasksRouter);
+app.use('/conversations', conversationsRouter);
+app.use('/status', statusRouter);
+app.use('/workspace', workspaceRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

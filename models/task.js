@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var taskSchema = mongoose.Schema({
   name: String,
   description: String,
+  dtdeb: Date,
   dtclosure: Date,
   duedate: Date,
   idassignee: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },

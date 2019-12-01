@@ -44,6 +44,7 @@ router.post('/project', async function(req, res, next) {
     var eventSaveToDB = await createevent(newProject._id, 'P', 'C');
 
     newProject.event.push(eventSaveToDB._id);
+    project.dtdeb = eventSaveToDB.dtevent;
 
     var projectSaveToDB = await newProject.save();
 
@@ -57,6 +58,38 @@ router.post('/project', async function(req, res, next) {
       res: false,
       msg: 'Project refused: this name is already used by another project'
     });
+  }
+});
+
+/* Put project creation */
+router.put('/project/:projectId', async function(req, res, next) {
+  console.log('**** Put project update ****');
+
+  var name = req.body.name;
+  var description = req.body.description;
+  var duedate = req.body.duedate;
+  var idowner = req.body.idowner;
+
+  var projectId = req.params.projectId;
+  var project = await projectModel.findById(projectId);
+
+  if (project) {
+    project.name = name;
+    project.description = description;
+    project.duedate = duedate;
+    project.idowner = idowner;
+
+    /* create update event */
+    var eventSaveToDB = await createevent(project._id, 'T', 'U');
+
+    project.event.push(eventSaveToDB._id);
+
+    /* Save the project */
+    var projectSaveToDB = await project.save();
+
+    res.json({ res: true, project: projectSaveToDB });
+  } else {
+    res.json({ res: false, msg: 'Project not found !' });
   }
 });
 
