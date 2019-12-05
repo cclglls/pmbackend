@@ -35,7 +35,7 @@ router.get('/:projectId/:userId', async function(req, res, next) {
   var task = await taskModel.find(searchObject).populate([
     { path: 'idassignee', model: userModel },
     { path: 'idproject', model: projectModel },
-    { path: 'idsection', model: sectionModel },
+    /*{ path: 'idsection', model: sectionModel },*/
     {
       path: 'idconversation',
       model: conversationModel,
@@ -59,6 +59,7 @@ router.post('/task', async function(req, res, next) {
   var idsection = req.body.idsection;
   var idconversation = req.body.idconversation;
   var follower = req.body.follower;
+  var iduser = req.body.iduser;
 
   /* Create task */
   var newtask = new taskModel({
@@ -73,7 +74,7 @@ router.post('/task', async function(req, res, next) {
   });
 
   /* Create event */
-  var eventSaveToDB = await createevent(newtask._id, 'T', 'C');
+  var eventSaveToDB = await createevent(newtask._id, 'T', 'C', iduser);
 
   newtask.event.push(eventSaveToDB._id);
   newtask.dtdeb = eventSaveToDB.dtevent;
@@ -128,6 +129,7 @@ router.put('/task/:taskId', async function(req, res, next) {
   var idsection = req.body.idsection;
   var follower = req.body.follower;
   var comment = req.body.comment;
+  var iduser = req.body.iduser;
 
   var taskId = req.params.taskId;
   var task = await taskModel.findById(taskId);
@@ -143,7 +145,7 @@ router.put('/task/:taskId', async function(req, res, next) {
     task.follower = follower;
 
     /* create update event */
-    var eventSaveToDB = await createevent(task._id, 'T', 'U');
+    var eventSaveToDB = await createevent(task._id, 'T', 'U', iduser);
 
     task.event.push(eventSaveToDB._id);
 

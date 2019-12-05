@@ -5,6 +5,12 @@ var mongoose = require('mongoose');
 var workspaceModel = require('../models/workspace');
 var sectionModel = require('../models/section');
 var projectModel = require('../models/project');
+var userModel = require('../models/user');
+var eventModel = require('../models/event');
+var taskModel = require('../models/task');
+var commentModel = require('../models/comment');
+var conversations = require('./conversations');
+var conversationModel = conversations.conversationModel;
 
 /* GET workspace */
 router.get('/:projectId', async function(req, res, next) {
@@ -15,7 +21,22 @@ router.get('/:projectId', async function(req, res, next) {
 
   var section = await sectionModel
     .find({ idworkspace: workspace._id })
-    .populate('task');
+    .populate([
+      {
+        path: 'task',
+        model: taskModel,
+        populate: [
+          { path: 'idassignee', model: userModel },
+          { path: 'idproject', model: projectModel },
+          {
+            path: 'idconversation',
+            model: conversationModel,
+            populate: { path: 'comment', model: commentModel }
+          },
+          { path: 'event', model: eventModel }
+        ]
+      }
+    ]);
 
   res.json({ res: true, section });
 });

@@ -5,10 +5,12 @@ var eventSchema = mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
   entity: String,
   type: String,
-  project: { type: mongoose.Schema.Types.ObjectId, ref: 'project' },
-  task: { type: mongoose.Schema.Types.ObjectId, ref: 'task' },
-  conversation: { type: mongoose.Schema.Types.ObjectId, ref: 'conversation' },
-  comment: { type: mongoose.Schema.Types.ObjectId, ref: 'comment' }
+  iduser: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+  idproject: { type: mongoose.Schema.Types.ObjectId, ref: 'project' },
+  idtask: { type: mongoose.Schema.Types.ObjectId, ref: 'task' },
+  idconversation: { type: mongoose.Schema.Types.ObjectId, ref: 'conversation' },
+  idcomment: { type: mongoose.Schema.Types.ObjectId, ref: 'comment' },
+  idstatus: { type: mongoose.Schema.Types.ObjectId, ref: 'status' }
 });
 
 module.exports = mongoose.model('event', eventSchema);

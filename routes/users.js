@@ -27,6 +27,8 @@ router.post('/sign-up', async function(req, res, next) {
   var lastname = req.body.lastname;
   var email = req.body.email;
   var password = req.body.password;
+  var iduser = req.body.iduser;
+
   var type = 'admin';
   var dtevent = new Date();
   var initials =
@@ -48,7 +50,7 @@ router.post('/sign-up', async function(req, res, next) {
       type
     });
 
-    var eventSaveToDB = await createevent(newUser._id, 'U', 'C');
+    var eventSaveToDB = await createevent(newUser._id, 'U', 'C', iduser);
 
     newUser.event.push(eventSaveToDB._id);
 

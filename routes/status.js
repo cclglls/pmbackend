@@ -42,6 +42,7 @@ router.post('/status', async function(req, res, next) {
   var status = req.body.status;
   var convFirstComment = req.body.convFirstComment;
   var chartProgress = req.body.chartProgress;
+  var iduser = req.body.iduser;
 
   /* Create status */
   var newstatus = new statusModel({
@@ -75,7 +76,7 @@ router.post('/status', async function(req, res, next) {
   );
 
   /* Event 'C' */
-  var eventSaveToDB = await createevent(newstatus._id, 'S', 'C');
+  var eventSaveToDB = await createevent(newstatus._id, 'S', 'C', iduser);
 
   newstatus.event.push(eventSaveToDB._id);
 

@@ -33,6 +33,7 @@ var createconversation = async function(req) {
   var idtask = req.body.idtask;
   var type = req.body.type;
   var comment = req.body.comment;
+  var iduser = req.body.iduser;
 
   /* Save the conversation */
   var newconversation = new conversationModel({
@@ -43,7 +44,7 @@ var createconversation = async function(req) {
   });
 
   /* Create event 'C' */
-  var eventSaveToDB = await createevent(newconversation._id, 'CV', 'C');
+  var eventSaveToDB = await createevent(newconversation._id, 'CV', 'C', iduser);
 
   newconversation.event.push(eventSaveToDB._id);
 

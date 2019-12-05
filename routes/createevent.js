@@ -1,7 +1,9 @@
 var eventModel = require('../models/event');
 
-var createevent = async function(Id, entity, type) {
+var createevent = async function(Id, entity, type, iduser, dtevt) {
   var dtevent = new Date();
+
+  if (dtevt) dtevent = dtevt;
 
   var userId = null;
   var projectId = null;
@@ -33,14 +35,15 @@ var createevent = async function(Id, entity, type) {
 
   var newEvent = new eventModel({
     dtevent,
-    user: userId,
-    project: projectId,
-    task: taskId,
-    conversation: convId,
-    comment: commentId,
-    status: statusId,
+    user: iduser,
     entity,
-    type
+    type,
+    iduser: userId,
+    idproject: projectId,
+    idtask: taskId,
+    idconversation: convId,
+    idcomment: commentId,
+    idstatus: statusId
   });
 
   var eventSaveToDB = await newEvent.save();

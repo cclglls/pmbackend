@@ -28,6 +28,7 @@ router.post('/project', async function(req, res, next) {
   var description = req.body.description;
   var duedate = req.body.duedate;
   var idowner = req.body.idowner;
+  var iduser = req.body.iduser;
 
   var searchName = await projectModel.findOne({ name });
 
@@ -41,7 +42,7 @@ router.post('/project', async function(req, res, next) {
       idowner
     });
 
-    var eventSaveToDB = await createevent(newProject._id, 'P', 'C');
+    var eventSaveToDB = await createevent(newProject._id, 'P', 'C', iduser);
 
     newProject.event.push(eventSaveToDB._id);
     project.dtdeb = eventSaveToDB.dtevent;
@@ -69,6 +70,7 @@ router.put('/project/:projectId', async function(req, res, next) {
   var description = req.body.description;
   var duedate = req.body.duedate;
   var idowner = req.body.idowner;
+  var iduser = req.body.iduser;
 
   var projectId = req.params.projectId;
   var project = await projectModel.findById(projectId);
@@ -80,7 +82,7 @@ router.put('/project/:projectId', async function(req, res, next) {
     project.idowner = idowner;
 
     /* create update event */
-    var eventSaveToDB = await createevent(project._id, 'T', 'U');
+    var eventSaveToDB = await createevent(project._id, 'T', 'U', iduser);
 
     project.event.push(eventSaveToDB._id);
 
