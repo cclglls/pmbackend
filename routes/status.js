@@ -27,8 +27,6 @@ router.get('/', async function(req, res, next) {
       model: conversationModel,
       populate: { path: 'comment', model: commentModel }
     },
-
-    { path: 'progress', model: progressModel },
     { path: 'event', model: eventModel }
   ]);
 
