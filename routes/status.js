@@ -40,7 +40,7 @@ router.post('/status', async function(req, res, next) {
   var idproject = req.body.idproject;
   var dtstatus = req.body.dtstatus;
   var status = req.body.status;
-  var convFirstComment = req.body.convFirstComment;
+  var comment = req.body.comment;
   var chartProgress = req.body.chartProgress;
   var iduser = req.body.iduser;
 
@@ -57,7 +57,8 @@ router.post('/status', async function(req, res, next) {
   var body = {
     name,
     idproject,
-    type: 'status'
+    type: 'status',
+    comment
   };
   var reqconv = { body };
 
@@ -65,7 +66,7 @@ router.post('/status', async function(req, res, next) {
   //console.log('conversation', result);
   newstatus.idconversation = result.conversation._id;
 
-  /* Maj comment on task conversation */
+  /* Maj comment on task conversation 
   var body = {
     comment: [{ _id: '0', comment: convFirstComment }]
   };
@@ -74,6 +75,7 @@ router.post('/status', async function(req, res, next) {
     newstatus.idconversation,
     reqconv
   );
+  */
 
   /* Event 'C' */
   var eventSaveToDB = await createevent(newstatus._id, 'S', 'C', iduser);
@@ -88,20 +90,21 @@ router.post('/status', async function(req, res, next) {
   var tasks;
   var project = await projectModel.findById(idproject);
 
-  console.log(
+  /*console.log(
     project.dtdeb,
     new Date(dtstatus),
     project.dtdeb <= new Date(dtstatus)
-  );
+  );*/
 
   var dtfin = new Date(dtstatus);
-  var dtfin7 = dtfin.setDate(dtfin.getDate() + 7);
+  var dtfin7 = new Date(dtstatus).setDate(new Date(dtstatus).getDate() + 7);
 
   var i = 0;
   for (var d = project.dtdeb; d <= dtfin7; d.setDate(d.getDate() + 7)) {
     console.log('loop date', i, new Date(d));
 
     dtstat = new Date(d);
+    //console.log(dtstat, dtfin, dtstat > dtfin);
     if (dtstat > dtfin) dtstat = dtfin;
 
     var tasks = await taskModel.find({ dtdeb: { $lte: dtstat } });

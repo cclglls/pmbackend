@@ -53,6 +53,7 @@ router.post('/task', async function(req, res, next) {
 
   var name = req.body.name;
   var description = req.body.description;
+  var dtdeb = req.body.dtdeb;
   var duedate = req.body.duedate;
   var idassignee = req.body.idassignee;
   var idproject = req.body.idproject;
@@ -74,7 +75,7 @@ router.post('/task', async function(req, res, next) {
   });
 
   /* Create event */
-  var eventSaveToDB = await createevent(newtask._id, 'T', 'C', iduser);
+  var eventSaveToDB = await createevent(newtask._id, 'T', 'C', iduser, dtdeb);
 
   newtask.event.push(eventSaveToDB._id);
   newtask.dtdeb = eventSaveToDB.dtevent;
@@ -96,7 +97,10 @@ router.post('/task', async function(req, res, next) {
   var taskSaveToDB = await newtask.save();
 
   /* Ajout tache dans le workspace project */
-  var section = await sectionModel.findById(idsection);
+  var section;
+  if (!idsection) section = await sectionModel.findOne({ name: 'Backlog' });
+  else section = await sectionModel.findById(idsection);
+
   section.task.push(taskSaveToDB._id);
   var sectionSaveToDB = await section.save();
 
@@ -104,7 +108,9 @@ router.post('/task', async function(req, res, next) {
   var workspace = await workspaceModel.findOne({
     iduser: idassignee
   });
+
   console.log(workspace);
+
   section = await sectionModel.findOne({
     idworkspace: workspace._id,
     name: 'Tasks assigned to me'

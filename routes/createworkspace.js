@@ -2,8 +2,8 @@ var workspaceModel = require('../models/workspace');
 
 var createworkspace = async function(userId, projectId) {
   var newworkspace = new workspaceModel({
-    user: userId,
-    project: projectId
+    iduser: userId,
+    idproject: projectId
   });
 
   var workspaceSaveToDB = await newworkspace.save();

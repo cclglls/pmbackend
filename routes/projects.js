@@ -26,6 +26,7 @@ router.post('/project', async function(req, res, next) {
 
   var name = req.body.name;
   var description = req.body.description;
+  var dtdeb = req.body.dtdeb;
   var duedate = req.body.duedate;
   var idowner = req.body.idowner;
   var iduser = req.body.iduser;
@@ -42,10 +43,16 @@ router.post('/project', async function(req, res, next) {
       idowner
     });
 
-    var eventSaveToDB = await createevent(newProject._id, 'P', 'C', iduser);
+    var eventSaveToDB = await createevent(
+      newProject._id,
+      'P',
+      'C',
+      iduser,
+      dtdeb
+    );
 
     newProject.event.push(eventSaveToDB._id);
-    project.dtdeb = eventSaveToDB.dtevent;
+    newProject.dtdeb = eventSaveToDB.dtevent;
 
     var projectSaveToDB = await newProject.save();
 

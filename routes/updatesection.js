@@ -7,53 +7,53 @@ var updatesection = async function(workspace, sectionId, sectionFromFront) {
 
   /* Create Sections for users and for project */
   if (sectionId === null) {
-    if (workspace.user !== null) {
+    if (workspace.iduser !== null) {
       name = 'Tasks assigned to me';
       newsection = new sectionModel({
         name,
-        workspace: workspace.id
+        idworkspace: workspace.id
       });
       sectionSaveToDB = await newsection.save();
 
       name = 'Today';
       newsection = new sectionModel({
         name,
-        workspace: workspace.id
+        idworkspace: workspace.id
       });
       sectionSaveToDB = await newsection.save();
 
       name = 'Later';
       newsection = new sectionModel({
         name,
-        workspace: workspace.id
+        idworkspace: workspace.id
       });
       sectionSaveToDB = await newsection.save();
     } else {
       name = 'Week 2019-51';
       newsection = new sectionModel({
         name,
-        workspace: workspace.id
+        idworkspace: workspace.id
       });
       sectionSaveToDB = await newsection.save();
 
       name = 'Week 2019-50';
       newsection = new sectionModel({
         name,
-        workspace: workspace.id
+        idworkspace: workspace.id
       });
       sectionSaveToDB = await newsection.save();
 
       name = 'Week 2019-49';
       newsection = new sectionModel({
         name,
-        workspace: workspace.id
+        idworkspace: workspace.id
       });
       sectionSaveToDB = await newsection.save();
 
       name = 'Backlog';
       newsection = new sectionModel({
         name,
-        workspace: workspace.id
+        idworkspace: workspace.id
       });
       sectionSaveToDB = await newsection.save();
     }

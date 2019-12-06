@@ -13,11 +13,24 @@ var conversations = require('./conversations');
 var conversationModel = conversations.conversationModel;
 
 /* GET workspace */
-router.get('/:projectId', async function(req, res, next) {
+router.get('/:projectId/:userId', async function(req, res, next) {
   console.log('**** Get workspace ****');
 
-  var projectId = new mongoose.Types.ObjectId(req.params.projectId);
-  var workspace = await workspaceModel.findOne({ idproject: projectId });
+  console.log('req.params', req.params);
+
+  var workspace;
+  var projectId;
+  var userId;
+
+  if (req.params.projectId !== '0') {
+    var projectId = new mongoose.Types.ObjectId(req.params.projectId);
+    workspace = await workspaceModel.findOne({ idproject: projectId });
+  }
+
+  if (req.params.userId !== '0') {
+    var userId = new mongoose.Types.ObjectId(req.params.userId);
+    workspace = await workspaceModel.findOne({ iduser: userId });
+  }
 
   var section = await sectionModel
     .find({ idworkspace: workspace._id })
