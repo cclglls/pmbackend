@@ -79,6 +79,8 @@ router.put('/project/:projectId', async function(req, res, next) {
   var idowner = req.body.idowner;
   var iduser = req.body.iduser;
 
+  console.log('due date', duedate);
+
   var projectId = req.params.projectId;
   var project = await projectModel.findById(projectId);
 
