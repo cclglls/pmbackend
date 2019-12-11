@@ -10,17 +10,23 @@ var projectModel = require('../models/project');
 var createevent = require('./createevent');
 
 /* GET conversations */
-router.get('/', async function(req, res, next) {
+router.get('/:projectId', async function(req, res, next) {
   console.log('**** Get conversations ****');
 
-  var conversation = await conversationModel.find().populate([
-    {
-      path: 'comment',
-      model: commentModel,
-      populate: { path: 'event', model: eventModel }
-    },
-    { path: 'event', model: eventModel }
-  ]);
+  var projectId;
+  if (req.params.projectId !== '0')
+    projectId = new mongoose.Types.ObjectId(req.params.projectId);
+
+  var conversation = await conversationModel
+    .find({ idproject: projectId, type: 'conversation' })
+    .populate([
+      {
+        path: 'comment',
+        model: commentModel,
+        populate: { path: 'event', model: eventModel }
+      },
+      { path: 'event', model: eventModel }
+    ]);
   res.json({ res: true, conversation });
 });
 
