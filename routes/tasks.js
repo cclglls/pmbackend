@@ -18,19 +18,28 @@ var updateconversation = conversations.updateconversation;
 var mongoose = require('mongoose');
 
 /* GET tasks */
-router.get('/:projectId/:userId', async function(req, res, next) {
+router.get('/:projectId/:userId/:word', async function(req, res, next) {
   console.log('**** Get tasks ****');
 
   var projectId;
   var userId;
+
   if (req.params.projectId !== '0')
     projectId = new mongoose.Types.ObjectId(req.params.projectId);
   if (req.params.userId !== '0')
     userId = new mongoose.Types.ObjectId(req.params.userId);
 
+  var word;
+  if (req.params.word) word = req.params.word;
+
   var searchObject = {};
   if (projectId) searchObject = { idproject: projectId };
   if (userId) searchObject = { idassignee: userId };
+
+  if (word !== '' && word !== '*')
+    searchObject = { name: { $regex: word, $options: 'i' } };
+
+  console.log(searchObject);
 
   var task = await taskModel.find(searchObject).populate([
     { path: 'idassignee', model: userModel },
