@@ -158,14 +158,14 @@ router.put('/task/:taskId', async function(req, res, next) {
   var task = await taskModel.findById(taskId);
 
   if (task) {
-    task.name = name;
-    task.description = description;
-    task.duedate = duedate;
-    task.dtclosure = dtclosure;
-    task.idassignne = idassignee;
-    task.idproject = idproject;
-    task.idsection = idsection;
-    task.follower = follower;
+    if (name) task.name = name;
+    if (description) task.description = description;
+    if (duedate) task.duedate = duedate;
+    if (dtclosure) task.dtclosure = dtclosure;
+    if (idassignee) task.idassignne = idassignee;
+    if (idproject) task.idproject = idproject;
+    if (idsection) task.idsection = idsection;
+    if (follower) task.follower = follower;
 
     /* create update event */
     var eventSaveToDB = await createevent(task._id, 'T', 'U', iduser);

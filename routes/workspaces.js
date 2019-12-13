@@ -46,7 +46,11 @@ router.get('/:projectId/:userId', async function(req, res, next) {
             model: conversationModel,
             populate: { path: 'comment', model: commentModel }
           },
-          { path: 'event', model: eventModel }
+          {
+            path: 'event',
+            model: eventModel,
+            populate: { path: 'user', model: userModel }
+          }
         ]
       }
     ]);
