@@ -16,7 +16,7 @@ var conversationModel = conversations.conversationModel;
 router.get('/:projectId/:userId', async function(req, res, next) {
   console.log('**** Get workspace ****');
 
-  console.log('req.params', req.params);
+  //console.log('req.params', req.params);
 
   var workspace;
   var projectId;
@@ -60,21 +60,21 @@ router.put('/sections', async function(req, res, next) {
 
   var sections = req.body.sections;
 
-  console.log(sections);
+  //console.log(sections);
 
   for (var i = 0; i < sections.length; i++) {
     var sectionId = new mongoose.Types.ObjectId(sections[i]._id);
-    console.log('sectionId', sectionId);
+    //console.log('sectionId', sectionId);
     var task = sections[i].task.map(function(task) {
       return new mongoose.Types.ObjectId(task._id);
     });
-    console.log('task', task);
+    //console.log('task', task);
 
     var section = await sectionModel.findById({ _id: sectionId });
     section.task = task;
     var sectionSaveToDB = await section.save();
 
-    console.log('section', sectionSaveToDB);
+    //console.log('section', sectionSaveToDB);
   }
 
   res.json({ res: true });

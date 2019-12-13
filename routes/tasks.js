@@ -58,9 +58,9 @@ router.post('/task', async function(req, res, next) {
   var idassignee = req.body.idassignee;
   var idproject = req.body.idproject;
   var idsection = req.body.idsection;
-  var idconversation = req.body.idconversation;
   var follower = req.body.follower;
   var iduser = req.body.iduser;
+  var comment = req.body.comment;
 
   /* Create task */
   var newtask = new taskModel({
@@ -70,7 +70,7 @@ router.post('/task', async function(req, res, next) {
     idassignee,
     idproject,
     idsection,
-    idconversation,
+    comment,
     follower
   });
 
@@ -85,7 +85,8 @@ router.post('/task', async function(req, res, next) {
   var body = {
     name,
     idtask: newtask._id,
-    type: 'conversation'
+    type: 'conversation',
+    comment
   };
   var reqconv = { body };
 
@@ -97,10 +98,17 @@ router.post('/task', async function(req, res, next) {
   var taskSaveToDB = await newtask.save();
 
   /* Ajout tache dans le workspace project */
-  var section;
-  if (!idsection) section = await sectionModel.findOne({ name: 'Backlog' });
-  else section = await sectionModel.findById(idsection);
+  var workspace = await workspaceModel.findOne({
+    idproject
+  });
 
+  console.log(workspace);
+
+  section = await sectionModel.findOne({
+    idworkspace: workspace._id,
+    name: 'Backlog'
+  });
+  console.log(section, taskSaveToDB._id);
   section.task.push(taskSaveToDB._id);
   var sectionSaveToDB = await section.save();
 
@@ -156,13 +164,15 @@ router.put('/task/:taskId', async function(req, res, next) {
     task.event.push(eventSaveToDB._id);
 
     /* Maj comment on task conversation */
-    var reqconv = {
-      comment
-    };
-    var conversation = await updateconversation(
-      req.params.conversationId,
-      reqconv
-    );
+    console.log('comment', comment);
+
+    if (comment) {
+      var body = {
+        comment
+      };
+      var reqconv = { body };
+      var conversation = await updateconversation(task.idconversation, reqconv);
+    }
 
     /* Save the task */
     var taskSaveToDB = await task.save();

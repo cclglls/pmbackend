@@ -60,16 +60,18 @@ var createconversation = async function(req) {
   var conversation = conversationSaveToDB;
   if (comment) {
     var body = {
-      comment: [{ _id: '0', comment }]
+      //comment: [{ _id: '0', comment }]
+      comment
     };
     var reqconv = { body };
-    conversation = await updateconversation(conversationSaveToDB._id, reqconv);
+    result = await updateconversation(conversationSaveToDB._id, reqconv);
+    conversation = result.conversation;
   }
 
   /* Add conversation to project if necessary */
   if (idproject) {
     var project = await projectModel.findById(idproject);
-    project.conversation.push(conversationSaveToDB._id);
+    project.conversation.push(conversation._id);
     var projectSaveToDB = await project.save();
   }
 

@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var mongoose = require('mongoose');
 
 var statusModel = require('../models/status');
 var progress = require('../models/progress');
@@ -17,11 +18,14 @@ var createevent = require('./createevent');
 
 /* GET status */
 
-router.get('/', async function(req, res, next) {
+router.get('/:projectId', async function(req, res, next) {
   console.log('**** Get status ****');
 
-  var status = await statusModel.find().populate([
-    { path: 'idproject', model: projectModel },
+  var projectId;
+  if (req.params.projectId !== '0')
+    projectId = new mongoose.Types.ObjectId(req.params.projectId);
+
+  var status = await statusModel.find({ idproject: projectId }).populate([
     {
       path: 'idconversation',
       model: conversationModel,
@@ -63,7 +67,7 @@ router.post('/status', async function(req, res, next) {
   var reqconv = { body };
 
   var result = await createconversation(reqconv);
-  //console.log('conversation', result);
+  console.log('conversation', result);
   newstatus.idconversation = result.conversation._id;
 
   /* Maj comment on task conversation 
