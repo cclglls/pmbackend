@@ -86,56 +86,60 @@ router.post('/status', async function(req, res, next) {
 
   newstatus.event.push(eventSaveToDB._id);
 
-  /* Create Progress */
-  var progress = [];
-  var dtstat;
-  var tasks_created;
-  var tasks_closed;
-  var tasks;
-  var project = await projectModel.findById(idproject);
+  console.log('chartprogress', chartProgress);
 
-  /*console.log(
-    project.dtdeb,
-    new Date(dtstatus),
-    project.dtdeb <= new Date(dtstatus)
-  );*/
+  if (chartProgress) {
+    /* Create Progress */
+    var progress = [];
+    var dtstat;
+    var tasks_created;
+    var tasks_closed;
+    var tasks;
+    var project = await projectModel.findById(idproject);
 
-  var dtfin = new Date(dtstatus);
-  var dtfin7 = new Date(dtstatus).setDate(new Date(dtstatus).getDate() + 7);
+    /*console.log(
+      project.dtdeb,
+      new Date(dtstatus),
+      project.dtdeb <= new Date(dtstatus)
+    );*/
 
-  var i = 0;
-  for (var d = project.dtdeb; d <= dtfin7; d.setDate(d.getDate() + 7)) {
-    console.log('loop date', i, new Date(d));
+    var dtfin = new Date(dtstatus);
+    var dtfin7 = new Date(dtstatus).setDate(new Date(dtstatus).getDate() + 7);
 
-    dtstat = new Date(d);
-    //console.log(dtstat, dtfin, dtstat > dtfin);
-    if (dtstat > dtfin) dtstat = dtfin;
+    var i = 0;
+    for (var d = project.dtdeb; d <= dtfin7; d.setDate(d.getDate() + 7)) {
+      console.log('loop date', i, new Date(d));
 
-    var tasks = await taskModel.find({ dtdeb: { $lte: dtstat } });
+      dtstat = new Date(d);
+      //console.log(dtstat, dtfin, dtstat > dtfin);
+      if (dtstat > dtfin) dtstat = dtfin;
 
-    tasks_created = tasks.length;
-    tasks_closed = 0;
-    for (var j = 0; j < tasks.length; j++) {
-      if (tasks[j].dtclosure) tasks_closed++;
+      var tasks = await taskModel.find({ dtdeb: { $lte: dtstat } });
+
+      tasks_created = tasks.length;
+      tasks_closed = 0;
+      for (var j = 0; j < tasks.length; j++) {
+        if (tasks[j].dtclosure) tasks_closed++;
+      }
+
+      progress[i] = {
+        dtstat,
+        tasks_created,
+        tasks_closed
+      };
+
+      console.log('progress', i, progress[i]);
+
+      /* Save progress in status */
+      var newprogress = new progressModel({
+        dtstat,
+        tasks_created,
+        tasks_closed
+      });
+      newstatus.progress.push(newprogress);
+
+      i = i + 1;
     }
-
-    progress[i] = {
-      dtstat,
-      tasks_created,
-      tasks_closed
-    };
-
-    console.log('progress', i, progress[i]);
-
-    /* Save progress in status */
-    var newprogress = new progressModel({
-      dtstat,
-      tasks_created,
-      tasks_closed
-    });
-    newstatus.progress.push(newprogress);
-
-    i = i + 1;
   }
 
   /* Save status */

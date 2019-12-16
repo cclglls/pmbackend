@@ -10,23 +10,31 @@ var projectModel = require('../models/project');
 var createevent = require('./createevent');
 
 /* GET conversations */
-router.get('/:projectId', async function(req, res, next) {
+router.get('/:projectId/:convId', async function(req, res, next) {
   console.log('**** Get conversations ****');
 
-  var projectId;
-  if (req.params.projectId !== '0')
-    projectId = new mongoose.Types.ObjectId(req.params.projectId);
+  var searchObject = {};
 
-  var conversation = await conversationModel
-    .find({ idproject: projectId, type: 'conversation' })
-    .populate([
-      {
-        path: 'comment',
-        model: commentModel,
-        populate: { path: 'event', model: eventModel }
-      },
-      { path: 'event', model: eventModel }
-    ]);
+  var projectId;
+  if (req.params.projectId !== '0') {
+    projectId = new mongoose.Types.ObjectId(req.params.projectId);
+    searchObject = { idproject: projectId, type: 'conversation' };
+  }
+
+  var convId;
+  if (req.params.convId !== '0') {
+    convId = new mongoose.Types.ObjectId(req.params.convId);
+    searchObject = { _id: convId };
+  }
+
+  var conversation = await conversationModel.find(searchObject).populate([
+    {
+      path: 'comment',
+      model: commentModel,
+      populate: { path: 'event', model: eventModel }
+    },
+    { path: 'event', model: eventModel }
+  ]);
   res.json({ res: true, conversation });
 });
 

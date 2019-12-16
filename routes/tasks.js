@@ -158,6 +158,8 @@ router.put('/task/:taskId', async function(req, res, next) {
   var task = await taskModel.findById(taskId);
 
   if (task) {
+    var z = 'U';
+    if (!task.dtclosure && dtclosure) z = 'E'; /* End = Closure */
     if (name) task.name = name;
     if (description) task.description = description;
     if (duedate) task.duedate = duedate;
@@ -168,7 +170,8 @@ router.put('/task/:taskId', async function(req, res, next) {
     if (follower) task.follower = follower;
 
     /* create update event */
-    var eventSaveToDB = await createevent(task._id, 'T', 'U', iduser);
+
+    var eventSaveToDB = await createevent(task._id, 'T', z, iduser);
 
     task.event.push(eventSaveToDB._id);
 
