@@ -78,7 +78,7 @@ router.put('/sections', async function(req, res, next) {
     section.task = task;
     var sectionSaveToDB = await section.save();
 
-    //console.log('section', sectionSaveToDB);
+    console.log('section', sectionSaveToDB);
   }
 
   res.json({ res: true });

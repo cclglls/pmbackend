@@ -70,17 +70,6 @@ router.post('/status', async function(req, res, next) {
   console.log('conversation', result);
   newstatus.idconversation = result.conversation._id;
 
-  /* Maj comment on task conversation 
-  var body = {
-    comment: [{ _id: '0', comment: convFirstComment }]
-  };
-  var reqconv = { body };
-  var conversation = await updateconversation(
-    newstatus.idconversation,
-    reqconv
-  );
-  */
-
   /* Event 'C' */
   var eventSaveToDB = await createevent(newstatus._id, 'S', 'C', iduser);
 
@@ -103,6 +92,9 @@ router.post('/status', async function(req, res, next) {
       project.dtdeb <= new Date(dtstatus)
     );*/
 
+    if (new Date(project.duedate) >= new Date(dtstatus))
+      dtstatus = project.duedate;
+
     var dtfin = new Date(dtstatus);
     var dtfin7 = new Date(dtstatus).setDate(new Date(dtstatus).getDate() + 7);
 
@@ -114,12 +106,15 @@ router.post('/status', async function(req, res, next) {
       //console.log(dtstat, dtfin, dtstat > dtfin);
       if (dtstat > dtfin) dtstat = dtfin;
 
-      var tasks = await taskModel.find({ dtdeb: { $lte: dtstat } });
+      var tasks = await taskModel.find({
+        idproject: project._id,
+        dtdeb: { $lte: dtstat }
+      });
 
       tasks_created = tasks.length;
       tasks_closed = 0;
       for (var j = 0; j < tasks.length; j++) {
-        if (tasks[j].dtclosure) tasks_closed++;
+        if (tasks[j].dtclosure && tasks[j].dtclosure <= dtstat) tasks_closed++;
       }
 
       progress[i] = {
