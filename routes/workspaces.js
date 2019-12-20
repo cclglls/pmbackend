@@ -16,7 +16,7 @@ var conversationModel = conversations.conversationModel;
 router.get('/:projectId/:userId', async function(req, res, next) {
   console.log('**** Get workspace ****');
 
-  //console.log('req.params', req.params);
+  console.log('req.params', req.params);
 
   var workspace;
   var projectId;

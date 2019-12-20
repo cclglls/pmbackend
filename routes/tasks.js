@@ -64,6 +64,7 @@ router.post('/task', async function(req, res, next) {
   var description = req.body.description;
   var dtdeb = req.body.dtdeb;
   var duedate = req.body.duedate;
+  var dtclosure = req.body.dtclosure;
   var idassignee = req.body.idassignee;
   var idproject = req.body.idproject;
   var idsection = req.body.idsection;
@@ -76,6 +77,7 @@ router.post('/task', async function(req, res, next) {
     name,
     description,
     duedate,
+    dtclosure,
     idassignee,
     idproject,
     idsection,
